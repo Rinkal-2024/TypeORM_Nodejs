@@ -17,8 +17,8 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  // const token = req.cookies.jwt;
-   const token = req.body.token;
+  const token = req.cookies.jwt;
+  //  const token = req.body.token;
   if (!token) {
     return res
       .status(401)
