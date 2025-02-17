@@ -40,8 +40,8 @@ AppDataSource.initialize().then(connection => {
     const app = express();
 
     const corsOptions = {
+        origin: "https://cosmaapi.rrsolutionstest.it",
         allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
-        allowedOrigins: "*",
         methods: "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS",
         exposedHeaders: ["Access-Token", "Uid", "X-Access-Token"]
     };
