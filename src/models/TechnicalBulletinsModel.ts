@@ -3,17 +3,17 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
+  CreateDateColumn,
 } from "typeorm";
 import { Users } from "./UsersModel";
 import { Aircraft } from "./AircraftsModel";
+import { Organization } from "./OrganizationsModel";
 
-
-@Entity("techincal_bullettins")
-export class TechincalBullettins {
+@Entity("technical_bulletins")
+export class TechnicalBulletins {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,11 +25,18 @@ export class TechincalBullettins {
   @JoinColumn({ name: "aircraft_id" })
   aircraft: Aircraft;
 
+  @ManyToOne(() => Organization, (organization) => organization.org_id)
+  @JoinColumn({ name: "org_id" })
+  organization: Organization;
+
   @Column("int")
   user_id: number;
 
   @Column("int")
   aircraft_id: number;
+
+  @Column("int")
+  org_id: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   sb_no: string;
@@ -112,18 +119,31 @@ export class TechincalBullettins {
   @Column({ type: "int", nullable: true })
   remaining_cycles: number | null;
 
+  @Column({ type: "varchar", length: 255, nullable: true })
+  aircraft_type: string | null;
+
+  @Column({ type: "datetime", nullable: true })
+  appli_expiration_notice: Date | null;
+
+  @Column({ nullable: true })
+  tb_appli_expiration_hour: number;
+
+  @Column({ nullable: true })
+  tb_appli_expiration_minutes: number;
+
+  @Column({ nullable: true })
+  tb_appli_expiration_cycle: number;
+
+  @Column({ type: "varchar", length: 100 })
+  registration_mark: string;
+
   @Column({ type: "tinyint", default: 1 })
   status: number;
 
-  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
+  @CreateDateColumn({ type: "datetime" })
   created_at: Date;
 
-  @Column({
-    type: "datetime",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "datetime" })
   updated_at: Date;
 
   @DeleteDateColumn({ type: "datetime", nullable: true })

@@ -8,8 +8,8 @@ export class CreateOrganizationTable1738848041631
         id INT(11) PRIMARY KEY AUTO_INCREMENT Not Null,
         org_id VARCHAR(255) NOT NULL,
         status TINYINT(1) DEFAULT 1 COMMENT '1 = Active',
-        created_at DATETIME NOT NULL,
-        updated_at DATETIME NOT NULL
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
     `);
   }

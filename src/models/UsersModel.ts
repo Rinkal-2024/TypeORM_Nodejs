@@ -10,9 +10,14 @@ import {
 } from "typeorm";
 import { UserRole } from "./UsersRole";
 import { Organization } from "./OrganizationsModel";
-import { TechincalBullettins } from "./TechincalBullettinsModel";
+import { Sessions } from "./Sessions";
+import { TechnicalBulletins } from "./TechnicalBulletinsModel";
+import { EvaluationHistory } from "./ EvaluationsHistoryModel";
+import { WorkReport } from "./WorkReportsModel";
+import { Inspection } from "./InspectionsModel";
+import { InspectionHistory } from "./InspectionsWorkReportModel";
 
-@Entity("user")
+@Entity("users")
 export class Users {
   @PrimaryGeneratedColumn()
   id: number;
@@ -49,17 +54,33 @@ export class Users {
   @Column({ type: "tinyint", default: 1 })
   status: number;
 
-  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
+  @CreateDateColumn({ type: "datetime" })
   created_at: Date;
 
-  @Column({
-    type: "datetime",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "datetime" })
   updated_at: Date;
 
-  @OneToMany(() => TechincalBullettins, (techBullettin) => techBullettin.user)
-  techBullettins: TechincalBullettins[];
+  @OneToMany(
+    () => TechnicalBulletins,
+    (technicalBulletin) => technicalBulletin.user
+  )
+  techBullettins: TechnicalBulletins[];
+
+  @OneToMany((type) => Sessions, (session) => session.user)
+  session: Sessions;
+
+  @OneToMany(() => EvaluationHistory, (evaluation) => evaluation.user)
+  evaluations: EvaluationHistory[];
+
+  @OneToMany(() => WorkReport, (workreport) => workreport.user)
+  workreports: EvaluationHistory[];
+
+  @OneToMany(() => Inspection, (Inspection) => Inspection.user)
+  Inspections: Inspection[];
+
+  @OneToMany(
+    () => InspectionHistory,
+    (Inspectionhistory) => Inspectionhistory.user
+  )
+  Inspectionhistory: InspectionHistory[];
 }

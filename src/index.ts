@@ -5,7 +5,13 @@ import { Users } from "./models/UsersModel";
 import { Organization } from "./models/OrganizationsModel";
 import { Aircraft } from "./models/AircraftsModel";
 import { seedUserRoles } from "./seeders/UserRoleSeeder";
-import { TechincalBullettins } from "./models/TechincalBullettinsModel";
+import { Sessions } from "./models/Sessions";
+import { TechnicalBulletins } from "./models/TechnicalBulletinsModel";
+import { EvaluationHistory } from "./models/ EvaluationsHistoryModel";
+import { WorkReport } from "./models/WorkReportsModel";
+import { Inspection } from "./models/InspectionsModel";
+import { InspectionHistory } from "./models/InspectionsWorkReportModel";
+import { Components } from "./models/ComponentsModel";
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -24,7 +30,19 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   charset: "utf8mb4_unicode_ci",
-  entities: [Users, UserRole, Organization, Aircraft, TechincalBullettins],
+  entities: [
+    Users,
+    UserRole,
+    Organization,
+    Aircraft,
+    TechnicalBulletins,
+    Sessions,
+    EvaluationHistory,
+    WorkReport,
+    Inspection,
+    InspectionHistory,
+    Components
+  ],
   synchronize: false,
   logging: false,
   name: "default",

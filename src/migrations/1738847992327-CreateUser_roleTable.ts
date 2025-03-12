@@ -7,8 +7,8 @@ export class CreateUserRoleTable1738847992327 implements MigrationInterface {
     id INT(11) AUTO_INCREMENT PRIMARY KEY Not Null,
     role VARCHAR(50) NOT NULL,
     status TINYINT(1) DEFAULT 1 COMMENT '1 = Active',
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
    `);
   }

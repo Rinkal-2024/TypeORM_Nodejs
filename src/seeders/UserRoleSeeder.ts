@@ -13,20 +13,14 @@ export const seedUserRoles = async (dataSource: DataSource) => {
     {
       role: "Admin",
       status: 1,
-      created_at: new Date(),
-      updated_at: new Date(),
     },
     {
       role: "User",
       status: 1,
-      created_at: new Date(),
-      updated_at: new Date(),
     },
     {
       role: "Read only",
       status: 1,
-      created_at: new Date(),
-      updated_at: new Date(),
     },
   ];
 

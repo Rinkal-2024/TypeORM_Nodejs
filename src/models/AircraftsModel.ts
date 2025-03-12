@@ -1,14 +1,20 @@
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Organization } from "./OrganizationsModel";
-import { TechincalBullettins } from "./TechincalBullettinsModel";
+import { TechnicalBulletins } from "./TechnicalBulletinsModel";
+import { Inspection } from "./InspectionsModel";
+import { InspectionHistory } from "./InspectionsWorkReportModel";
+import { WorkReport } from "./WorkReportsModel";
+import { EvaluationHistory } from "./ EvaluationsHistoryModel";
 
 @Entity({ name: "aircrafts" })
 export class Aircraft {
@@ -86,27 +92,38 @@ export class Aircraft {
   empyt_weight: number;
 
   @Column({ type: "tinyint", default: 1 })
-  status: number; // 1 = Active, 0 = Inactive
+  status: number;
 
-  @Column({
-    type: "datetime",
-    default: () => "CURRENT_TIMESTAMP",
-  })
+  @CreateDateColumn({ type: "datetime" })
   created_at: Date;
 
-  @Column({
-    type: "datetime",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn({ type: "datetime" })
   updated_at: Date;
 
   @DeleteDateColumn()
-  deleted_at?: Date; // Soft delete column
+  deleted_at?: Date;
 
   @OneToMany(
-    () => TechincalBullettins,
+    () => TechnicalBulletins,
     (techBullettin) => techBullettin.aircraft
   )
-  techBullettins: TechincalBullettins[];
+  techBullettins: TechnicalBulletins[];
+
+  @OneToMany(() => Inspection, (Inspection) => Inspection.aircraft)
+  Inspections: Inspection[];
+
+  @OneToMany(
+    () => InspectionHistory,
+    (Inspectionhistory) => Inspectionhistory.aircraft
+  )
+  Inspectionhistory: InspectionHistory[];
+
+  @OneToMany(() => WorkReport, (WorkReports) => WorkReports.aircraft)
+  WorkReports: Inspection[];
+
+  @OneToMany(
+    () => EvaluationHistory,
+    (EvaluationHistory) => EvaluationHistory.aircraft
+  )
+  EvaluationHistory: Inspection[];
 }

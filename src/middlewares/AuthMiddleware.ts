@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../config/jwt";
-import { Users } from "../models/UsersModel";
+// import { verifyToken } from "../config/jwt";
 import { AppDataSource } from "../index";
-import { Aircraft } from "../models/AircraftsModel";
+import { _verifyJWTToken } from "./auth";
+import { Sessions } from "../models/Sessions";
+
 declare global {
   namespace Express {
     interface Request {
@@ -12,39 +13,46 @@ declare global {
   }
 }
 
-export const authenticateUser = async (
+export const authMiddlewareController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.jwt;
-  //  const token = req.body.token;
-  if (!token) {
-    return res
-      .status(401)
-      .json({ status: 401, message: "Access denied, no token provided" });
-  }
-
   try {
-    const decoded: any = verifyToken(token);
-    const userRepository = AppDataSource.getRepository(Users);
-    const aircraftRepository = AppDataSource.getRepository(Aircraft);
-    const existingUser = await userRepository.findOne({
-      where: {
-        email: decoded.user.email,
-      },
-    });
-    if (existingUser !== null) {
-      const userAircrafts = await aircraftRepository.find({
-        where: { org_id: existingUser.org_id }, // Use org_id to find aircrafts
-      });
-      req.user = existingUser;
-      req.aircrafts = userAircrafts;
-      next();
-    } else {
-      res.status(401).json({ status: 401, message: "No user Found" });
+    const token = req.header("X-Access-Token");
+
+    if (!token) {
+      return res.status(410).send("Invalid session token provided.");
     }
+    const sessionRepository = AppDataSource.getRepository(Sessions);
+    const existingSession = await sessionRepository
+      .createQueryBuilder("session")
+      .where("session.token = :sessionToken", { sessionToken: token })
+      .andWhere("session.loggedOutAt IS NULL")
+      .getOne();
+    // const existingSession: any = await getExistingSession(token);
+    if (!existingSession) {
+      return res.status(400).send("Invalid session token provided");
+    }
+    _verifyJWTToken(token)
+      .then(async (decodedToken: any) => {
+        req.user = existingSession;
+
+        // existingSession[0].updatedAt = moment().format(Global.UTC_DATE_TIME_FORMAT);
+        // await updateSessionToken(existingSession[0]);
+        next();
+      })
+      .catch(async (err: any) => {
+        if (err.name === "TokenExpiredError") {
+          // existingSession[0].deletedAt = moment().format(Global.UTC_DATE_TIME_FORMAT);
+          // await updateSessionToken(existingSession[0]);
+          return res.status(409).json("Session token expired.");
+        } else {
+          return res.status(410).send("Invalid session token provided.");
+        }
+      });
   } catch (error) {
-    res.status(401).json({ status: 401, message: "Invalid or expired token" });
+    console.log(error);
+    res.status(500).send("There was a problem with retrieving the token!");
   }
 };
