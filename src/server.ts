@@ -16,6 +16,7 @@ import { AppDataSource } from "./index";
 import { Global } from "./config/Global";
 const flash = require("express-flash");
 const i18n = require("i18n");
+import { cronJob } from "./cron-job/movement-data-delete";
 
 /**
  * Load controllers
@@ -152,6 +153,8 @@ AppDataSource.initialize()
       );
       console.log("Press CTRL-C to stop\n");
     });
+
+    // cronJob.start();
 
     i18n.configure({
       locales: ["en", "de", "it"],

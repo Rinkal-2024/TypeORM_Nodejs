@@ -2,41 +2,47 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { Users } from "./UsersModel";
-import { Aircraft } from "./AircraftsModel";
-import { Organization } from "./OrganizationsModel";
+import { Users } from "./Users";
+import { Aircrafts } from "./Aircrafts";
+import { Inspections } from "./Inspections";
 
-@Entity("components")
-export class Components {
+@Entity("i_evaluation_histories")
+export class InspectionEvaluationsHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.Inspections, { onDelete: "CASCADE" })
+  @ManyToOne(() => Users, (user) => user.inspectionEvaluation)
   @JoinColumn({ name: "user_id" })
   user: Users;
 
-  @ManyToOne(() => Aircraft, (aircraft) => aircraft.id)
-  @JoinColumn({ name: "aircraft_id" })
-  aircraft: Aircraft;
+  @ManyToOne(() => Aircrafts, (aircraft) => aircraft.inspectionEvaluation)
+  @JoinColumn({ name: "aircraftId" })
+  aircraft: Aircrafts;
 
-  @ManyToOne(() => Organization, (organization) => organization.id)
-  @JoinColumn({ name: "org_id" })
-  organization: Organization;
+  @ManyToOne(
+    () => Inspections,
+    (inspection) => inspection.inspectionEvaluationHistory
+  )
+  @JoinColumn({ name: "inspection_id" })
+  inspections: Inspections;
 
   @Column("int")
   user_id: number;
 
   @Column("int")
-  aircraft_id: number;
+  inspection_id: number;
 
   @Column("int")
-  org_id: number;
+  aircraftId: number;
+
+  @Column({ type: "varchar", length: 50 })
+  wr_no: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   aircraft_type: string;
@@ -129,9 +135,33 @@ export class Components {
   cycle_type: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  c_key: string;
+  i_key: string;
 
-  @Column({ type: "tinyint", default: 1, nullable: false })
+  @Column({ type: "enum", enum: ["Yes", "No"], nullable: true })
+  applicable: "Yes" | "No";
+
+  @Column({ type: "text", nullable: true })
+  motivation: string;
+
+  @Column({ type: "datetime", nullable: true })
+  inspection_date: Date;
+
+  @Column({ type: "datetime", nullable: true })
+  next_date_exp: Date;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
+  insp_hours: string;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
+  next_hours_exp: string;
+
+  @Column({ type: "int", nullable: true })
+  insp_cycles: number;
+
+  @Column({ type: "int", nullable: true })
+  next_cycles_exp: number;
+
+  @Column({ type: "tinyint", width: 1, default: 1 })
   status: number;
 
   @CreateDateColumn({ type: "datetime" })
@@ -141,5 +171,9 @@ export class Components {
   updated_at: Date;
 
   @DeleteDateColumn({ type: "datetime", nullable: true })
-  deleted_at: Date | null;
+  deleted_at: Date;
 }
+
+
+
+

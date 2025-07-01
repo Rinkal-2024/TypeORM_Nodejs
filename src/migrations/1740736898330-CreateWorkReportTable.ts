@@ -6,7 +6,8 @@ export class CreateWorkReportTable1740736898330 implements MigrationInterface {
       CREATE TABLE tb_work_report (
         id INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
         user_id INT(11) NULL,
-        aircraft_id INT(11) NOT NULL,
+        technical_bulletin_id INT(11) NOT NULL,
+        aircraftId INT(11) NOT NULL,
         wr_no VARCHAR(100),
         sb_no VARCHAR(255) NULL,
         ed_easa VARCHAR(255) NULL,
@@ -24,7 +25,8 @@ export class CreateWorkReportTable1740736898330 implements MigrationInterface {
         updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         deleted_at DATETIME NULL DEFAULT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (aircraft_id) REFERENCES aircrafts(id)
+        FOREIGN KEY (technical_bulletin_id) REFERENCES technical_bulletins(id),
+        FOREIGN KEY (aircraftId) REFERENCES aircrafts(id)
       );
     `);
   }

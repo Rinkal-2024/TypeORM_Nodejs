@@ -4,10 +4,11 @@ export class CreateEvaluationHistoryTable1740652892681
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TABLE tb_evaluation_history (
+      CREATE TABLE tb_evaluation_histories (
         id INT(11) PRIMARY KEY AUTO_INCREMENT,
         user_id INT(11) NOT NULL,
-        aircraft_id INT(11) NOT NULL,
+        technical_bulletin_id INT(11) NOT NULL,
+        aircraftId INT(11) NOT NULL,
         eh_status VARCHAR(255) NULL,
         title TEXT NULL,
         easa_ad VARCHAR(255) NULL,
@@ -21,7 +22,8 @@ export class CreateEvaluationHistoryTable1740652892681
         updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         deleted_at DATETIME NULL DEFAULT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (aircraft_id) REFERENCES aircrafts(id)
+        FOREIGN KEY (technical_bulletin_id) REFERENCES technical_bulletins(id),
+        FOREIGN KEY (aircraftId) REFERENCES aircrafts(id)
       );
     `);
   }

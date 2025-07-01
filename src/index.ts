@@ -1,17 +1,22 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
-import { UserRole } from "./models/UsersRole";
-import { Users } from "./models/UsersModel";
-import { Organization } from "./models/OrganizationsModel";
-import { Aircraft } from "./models/AircraftsModel";
+import { UserRoles } from "./models/UserRoles";
+import { Users } from "./models/Users";
+import { Organizations } from "./models/Organizations";
+import { Aircrafts } from "./models/Aircrafts";
 import { seedUserRoles } from "./seeders/UserRoleSeeder";
 import { Sessions } from "./models/Sessions";
-import { TechnicalBulletins } from "./models/TechnicalBulletinsModel";
-import { EvaluationHistory } from "./models/ EvaluationsHistoryModel";
-import { WorkReport } from "./models/WorkReportsModel";
-import { Inspection } from "./models/InspectionsModel";
-import { InspectionHistory } from "./models/InspectionsWorkReportModel";
-import { Components } from "./models/ComponentsModel";
+import { TechnicalBulletins } from "./models/TechnicalBulletins";
+import { EvaluationsHistory } from "./models/EvaluationsHistory";
+import { WorkReports } from "./models/WorkReports";
+import { Inspections } from "./models/Inspections";
+import { InspectionsWorkReports } from "./models/InspectionsWorkReports";
+import { Components } from "./models/Components";
+import { InspectionEvaluationsHistory } from "./models/InspectionEvaluationsHistory";
+import { LatestMovements } from "./models/LatestMovements";
+import { MovementSubscriber } from "./MovementSubscriber";
+import { AircraftClone } from "./models/AircraftsClone";
+import { ComponentsEvaluations } from "./models/ComponentsEvaluations";
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -32,22 +37,27 @@ export const AppDataSource = new DataSource({
   charset: "utf8mb4_unicode_ci",
   entities: [
     Users,
-    UserRole,
-    Organization,
-    Aircraft,
+    UserRoles,
+    Organizations,
+    Aircrafts,
     TechnicalBulletins,
     Sessions,
-    EvaluationHistory,
-    WorkReport,
-    Inspection,
-    InspectionHistory,
-    Components
+    EvaluationsHistory,
+    WorkReports,
+    Inspections,
+    InspectionsWorkReports,
+    Components,
+    InspectionEvaluationsHistory,
+    LatestMovements,
+    AircraftClone,
+    ComponentsEvaluations,
   ],
   synchronize: false,
   logging: false,
   name: "default",
   migrations: ["dist/migrations/**/*{.ts,.js}"],
-  subscribers: ["dist/subscriber/**/*{.ts,.js}"],
+  // subscribers: ["dist/subscriber/**/*{.ts,.js}", MovementSubscriber],
+  subscribers: [MovementSubscriber],
 });
 AppDataSource.initialize()
   .then(async () => {

@@ -7,10 +7,13 @@ import {
   DeleteDateColumn,
   JoinColumn,
   CreateDateColumn,
+  OneToMany,
 } from "typeorm";
-import { Users } from "./UsersModel";
-import { Aircraft } from "./AircraftsModel";
-import { Organization } from "./OrganizationsModel";
+import { Users } from "./Users";
+import { Aircrafts } from "./Aircrafts";
+import { Organizations } from "./Organizations";
+import { WorkReports } from "./WorkReports";
+import { EvaluationsHistory } from "./EvaluationsHistory";
 
 @Entity("technical_bulletins")
 export class TechnicalBulletins {
@@ -21,22 +24,22 @@ export class TechnicalBulletins {
   @JoinColumn({ name: "user_id" })
   user: Users;
 
-  @ManyToOne(() => Aircraft, (aircraft) => aircraft.id)
-  @JoinColumn({ name: "aircraft_id" })
-  aircraft: Aircraft;
+  @ManyToOne(() => Aircrafts, (aircraft) => aircraft.id)
+  @JoinColumn({ name: "aircraftId" })
+  aircraft: Aircrafts;
 
-  @ManyToOne(() => Organization, (organization) => organization.org_id)
-  @JoinColumn({ name: "org_id" })
-  organization: Organization;
+  @ManyToOne(() => Organizations, (organization) => organization.organizationId)
+  @JoinColumn({ name: "organizationId" })
+  organization: Organizations;
 
   @Column("int")
   user_id: number;
 
   @Column("int")
-  aircraft_id: number;
+  aircraftId: number;
 
   @Column("int")
-  org_id: number;
+  organizationId: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   sb_no: string;
@@ -62,8 +65,8 @@ export class TechnicalBulletins {
   @Column({ type: "varchar", length: 255, nullable: true })
   cdn: string | null;
 
-  @Column({ type: "datetime", nullable: true })
-  cdn_issue_date: Date | null;
+    @Column({ type: "datetime", nullable: true })
+    cdn_issue_date: Date | null;
 
   @Column({ type: "text", nullable: true })
   pa_enac: string | null;
@@ -113,7 +116,7 @@ export class TechnicalBulletins {
   @Column({ type: "int", nullable: true })
   remaining_days: number | null;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "varchar", nullable: true })
   remaining_hours: number | null;
 
   @Column({ type: "int", nullable: true })
@@ -143,9 +146,18 @@ export class TechnicalBulletins {
   @CreateDateColumn({ type: "datetime" })
   created_at: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
-  updated_at: Date;
+  @Column({ type: "timestamp", nullable: true })
+  updated_at: Date | null;
 
   @DeleteDateColumn({ type: "datetime", nullable: true })
   deleted_at: Date | null;
+
+  @OneToMany(() => WorkReports, (workReport) => workReport.technicalBulletins)
+  workReportData: WorkReports[];
+
+  @OneToMany(
+    () => EvaluationsHistory,
+    (evaluationHistory) => evaluationHistory.technicalBulletins
+  )
+  tbEvaluationHistory: EvaluationsHistory[];
 }

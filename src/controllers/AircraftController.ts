@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../index";
-import { Aircraft } from "../models/AircraftsModel";
-import { Users } from "../models/UsersModel";
+import { Aircrafts } from "../models/Aircrafts";
+import { Users } from "../models/Users";
 
 export const getAircrafts = async (req: Request, res: Response) => {
   try {
-    const aircraftRepository = AppDataSource.getRepository(Aircraft);
+    const aircraftRepository = AppDataSource.getRepository(Aircrafts);
     const userRepository = AppDataSource.getRepository(Users);
     const userId = req.user.userId;
 
     const user = await userRepository.findOne({
       where: { id: userId },
-      select: ["org_id"],
+      select: ["organizationId"],
     });
 
     if (!user) {
@@ -22,13 +22,25 @@ export const getAircrafts = async (req: Request, res: Response) => {
     }
 
     const aircrafts = await aircraftRepository.find({
-      where: { org_id: user.org_id },
+      where: { organizationId: user.organizationId },
     });
-
+    const aircraftTyps = await aircraftRepository
+      .createQueryBuilder("aircrafts")
+      .select("MIN(aircrafts.id)", "id")
+      .addSelect("aircrafts.aircraftType", "aircraftType")
+      .addSelect("MAX(aircrafts.manufacturer)", "manufacturer")
+      .where("aircrafts.organizationId = :orgId", {
+        orgId: user.organizationId,
+      })
+      .groupBy(
+        "aircrafts.aircraftType, aircrafts.manufacturer,aircrafts.organizationId "
+      )
+      .getRawMany();
     return res.status(200).json({
       status: 200,
       message: "Aircrafts retrieved successfully",
       data: aircrafts,
+      aircraftTyps: aircraftTyps,
     });
   } catch (error) {
     return res.status(500).json({

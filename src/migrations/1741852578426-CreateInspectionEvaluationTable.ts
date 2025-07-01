@@ -1,14 +1,15 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateComponentsTable1741756576343 implements MigrationInterface {
+export class CreateInspectionEvaluationTable1741852578426 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-     CREATE TABLE components (
+     CREATE TABLE  i_evaluation_histories (
     id INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
     user_id INT(11) NOT NULL,
-    organizationId INT(11) NOT NULL,
+    inspection_id INT(11) NOT NULL,
     aircraftId INT(11) NOT NULL,
+    wr_no varchar(50)NOT NULL,
     aircraft_type VARCHAR(255) NULL,
     revision VARCHAR(255) NULL,
     revision_date DATETIME NULL,
@@ -39,22 +40,28 @@ export class CreateComponentsTable1741756576343 implements MigrationInterface {
     ref_manual TEXT NULL,
     documentation TEXT NULL,
     cycle_type VARCHAR(255) NULL,
-    c_key VARCHAR(255) NULL,
+    i_key VARCHAR(255) NULL,
     applicable enum('Yes','No') NULL,
     motivation text NULL,
+    inspection_date DATETIME NULL,
+    next_date_exp DATETIME NULL,
+    insp_hours varchar(100) NULL,
+    next_hours_exp	varchar(100) NULL,
+    insp_cycles int (10) NULL,
+    next_cycles_exp int (10) NULL,
     status TINYINT(1) DEFAULT 1 NOT NULL COMMENT '1 = Active, 0 = Inactive',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at DATETIME NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (aircraftId) REFERENCES aircrafts(id),
-    FOREIGN KEY (organizationId) REFERENCES organizations(id)
-);
+    FOREIGN KEY (inspection_id) REFERENCES inspections(id),
+    FOREIGN KEY (aircraftId) REFERENCES aircrafts(id)
+    );
     `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP TABLE IF EXISTS components;`);
+          await queryRunner.query(`DROP TABLE IF EXISTS i_evaluation_history;`);
     }
 
 }

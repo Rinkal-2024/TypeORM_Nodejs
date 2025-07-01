@@ -7,13 +7,16 @@ import {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
-import { Users } from "./UsersModel";
-import { Aircraft } from "./AircraftsModel";
-import { Organization } from "./OrganizationsModel";
+import { Users } from "./Users";
+import { Aircrafts } from "./Aircrafts";
+import { Organizations } from "./Organizations";
+import { InspectionsWorkReports } from "./InspectionsWorkReports";
+import { InspectionEvaluationsHistory } from "./InspectionEvaluationsHistory";
 
 @Entity("inspections")
-export class Inspection {
+export class Inspections {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,22 +24,22 @@ export class Inspection {
   @JoinColumn({ name: "user_id" })
   user: Users;
 
-  @ManyToOne(() => Aircraft, (aircraft) => aircraft.id)
-  @JoinColumn({ name: "aircraft_id" })
-  aircraft: Aircraft;
+  @ManyToOne(() => Aircrafts, (aircraft) => aircraft.id)
+  @JoinColumn({ name: "aircraftId" })
+  aircraft: Aircrafts;
 
-  @ManyToOne(() => Organization, (organization) => organization.id)
-  @JoinColumn({ name: "org_id" })
-  organization: Organization;
+  @ManyToOne(() => Organizations, (organization) => organization.id)
+  @JoinColumn({ name: "organizationId" })
+  organization: Organizations;
 
   @Column("int")
   user_id: number;
 
   @Column("int")
-  aircraft_id: number;
+  aircraftId: number;
 
   @Column("int")
-  org_id: number;
+  organizationId: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   aircraft_type: string;
@@ -128,8 +131,29 @@ export class Inspection {
   @Column({ type: "varchar", length: 255, nullable: true })
   cycle_type: string;
 
+  @Column({ type: "varchar", length: 100, nullable: true })
+  i_status: string;
+
   @Column({ type: "varchar", length: 255, nullable: true })
   i_key: string;
+
+  @Column({ type: "enum", enum: ["Yes", "No"], nullable: true })
+  applicable: "Yes" | "No";
+
+  @Column({ type: "text", nullable: true })
+  motivation: string;
+
+  @Column({ type: "varchar", length: 255, nullable: true })
+  work_report: string;
+
+  @Column({ type: "datetime", nullable: true })
+  exp_date_close: Date;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
+  exp_hours_close: string;
+
+  @Column({ type: "int", nullable: true })
+  exp_cycles_close: number;
 
   @Column({ type: "tinyint", default: 1, nullable: false })
   status: number;
@@ -142,4 +166,16 @@ export class Inspection {
 
   @DeleteDateColumn({ type: "datetime", nullable: true })
   deleted_at: Date | null;
+
+  @OneToMany(
+    () => InspectionsWorkReports,
+    (inspectionHistory) => inspectionHistory.inspections
+  )
+  inspectionHistory: InspectionsWorkReports[];
+
+  @OneToMany(
+    () => InspectionEvaluationsHistory,
+    (inspectionEvaluationHistory) => inspectionEvaluationHistory.inspections
+  )
+  inspectionEvaluationHistory: InspectionEvaluationsHistory[];
 }

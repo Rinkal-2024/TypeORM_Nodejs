@@ -7,8 +7,8 @@ export class CreateTechnicalBulletinTable1740652779036
             CREATE TABLE technical_bulletins (
                 id INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 user_id INT(11) NOT NULL,
-                org_id INT(11) NOT NULL,
-                aircraft_id INT(11)  NOT NULL,
+                organizationId INT(11) NOT NULL,
+                aircraftId INT(11)  NOT NULL,
                 sb_no VARCHAR(255) NULL,
                 issue_date DATETIME NULL,
                 revision VARCHAR(255) NULL,
@@ -34,7 +34,7 @@ export class CreateTechnicalBulletinTable1740652779036
                 fa_ad VARCHAR(255) NULL,
                 work_report TEXT NULL,
                 remaining_days INT(10) NULL,
-                remaining_hours INT(10) NULL,
+                remaining_hours  VARCHAR(255) NULL,
                 remaining_cycles INT(10) NULL,
                 aircraft_type VARCHAR(255) NULL,
                 appli_expiration_notice DATETIME NULL,
@@ -47,8 +47,8 @@ export class CreateTechnicalBulletinTable1740652779036
                 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 deleted_at DATETIME NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (aircraft_id) REFERENCES aircrafts(id),
-                FOREIGN KEY (org_id) REFERENCES organization(id)
+                FOREIGN KEY (aircraftId) REFERENCES aircrafts(id),
+                FOREIGN KEY (organizationId) REFERENCES organizations(id)
             );
         `);
   }

@@ -5,7 +5,7 @@ export class CreateUserTable1738848055970 implements MigrationInterface {
     await queryRunner.query(`
     CREATE TABLE users (
     id INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    org_id INT(11) NOT NULL,
+    organizationId INT(11) NOT NULL,
     role INT(11) NOT NULL,
     first_name VARCHAR(50) NULL,
     last_name VARCHAR(50) NULL,
@@ -16,7 +16,7 @@ export class CreateUserTable1738848055970 implements MigrationInterface {
     status TINYINT(1) DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (org_id) REFERENCES organization(id),
+    FOREIGN KEY (organizationId) REFERENCES organizations(id),
     FOREIGN KEY (role) REFERENCES user_role(id)
      );
      `);

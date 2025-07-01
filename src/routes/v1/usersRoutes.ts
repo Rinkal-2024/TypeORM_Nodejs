@@ -1,8 +1,10 @@
 import { Router } from "express";
 import {
   addLanguages,
+  changePassword,
   loginUser,
   logOut,
+  organizationPeople
 } from "../../controllers/UserController";
 import { authMiddlewareController } from "../../middlewares/AuthMiddleware";
 import {
@@ -13,11 +15,29 @@ import {
   getTechnicalBulletins,
   getWorkReportHistory,
   uploadExcel,
+  getEvualuationDeadlineHistory,
+  insertTechnicalUpdate
 } from "../../controllers/TechnicalController";
 import multer = require("multer");
-import { getInspectionData, inspectionWorkReport, inspectionWorkReportHistory, uploadInspectionExcel } from "../../controllers/InspectionsController";
+import {
+  getInspectionData,
+  insertInspectionAndWorkReport,
+  inspectionEvaluation,
+  inspectionWorkReportHistory,
+  uploadInspectionExcel,
+  inspectionDeadlineData,
+  inspectionUpdate,
+  closeWorkReport
+} from "../../controllers/InspectionsController";
 import { getAircrafts } from "../../controllers/AircraftController";
-import { getComponentsData, uploadComponentsExcel } from "../../controllers/ComponentsController";
+import {
+  componentEvaluation,
+  getComponentsData,
+  getComponentsDeadlineData,
+  uploadComponentsExcel,
+  insertcomponentEvaluation,
+} from "../../controllers/ComponentsController";
+import { getMovementsData, distinctMovementType } from "../../controllers/MovementsController";
 
 const router = Router();
 
@@ -42,13 +62,25 @@ router.post("/tbWorkReport", authMiddlewareController, addWorkReport);
 router.get("/tbWorkReportHistory", authMiddlewareController, getWorkReportHistory);
 router.post("/inspection", upload.single("file"), authMiddlewareController, uploadInspectionExcel);
 router.get("/fetchInspection", authMiddlewareController, getInspectionData);
-router.post("/inspectionWorkReport", authMiddlewareController, inspectionWorkReport);
+router.post("/inspectionWorkReport", authMiddlewareController, insertInspectionAndWorkReport);
 router.get("/inspectionWorkReportHistory", authMiddlewareController, inspectionWorkReportHistory);
 router.get("/profile", authMiddlewareController, getProfileDetails);
 router.get("/aircraft", authMiddlewareController, getAircrafts);
-router.post("/components", authMiddlewareController, uploadComponentsExcel);
+router.post("/components", upload.single("file"), authMiddlewareController, uploadComponentsExcel);
 router.get("/fechComponents", authMiddlewareController, getComponentsData);
-
+router.get("/fetchInspectionDeadline", authMiddlewareController, inspectionDeadlineData);
+router.get("/fetchComponentDeadline", authMiddlewareController, getComponentsDeadlineData);
+router.get("/fetchBulletinsDeadline", authMiddlewareController, getEvualuationDeadlineHistory);
+router.get("/fetchMovements", authMiddlewareController, getMovementsData);
+router.post("/changePassword", authMiddlewareController, changePassword);
+router.post("/inspectionUpdate", authMiddlewareController, inspectionUpdate);
+router.get("/organizationPeople", authMiddlewareController, organizationPeople);
+router.get("/distinctMovementType", authMiddlewareController, distinctMovementType);
+router.get("/fechinspectionEvaluation", authMiddlewareController, inspectionEvaluation);
+router.get("/fetchComponentEvaluation", authMiddlewareController, componentEvaluation);
+router.post("/addComponentEvaluation", authMiddlewareController, insertcomponentEvaluation);
+router.post("/updateTechnicalBulletin", authMiddlewareController, insertTechnicalUpdate);
+router.post("/closeWorkReport", authMiddlewareController, closeWorkReport);
 
 // export default router;
 module.exports = router;

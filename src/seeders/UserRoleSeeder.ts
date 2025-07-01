@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
-import { UserRole } from "../models/UsersRole";
+import { UserRoles } from "../models/UserRoles";
 
 export const seedUserRoles = async (dataSource: DataSource) => {
-  const userRoleRepository = dataSource.getRepository(UserRole);
+  const userRoleRepository = dataSource.getRepository(UserRoles);
 
   const existingRoles = await userRoleRepository.find();
   if (existingRoles.length > 0) {

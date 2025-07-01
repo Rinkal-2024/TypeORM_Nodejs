@@ -6,8 +6,8 @@ export class CreateInspectionTable1741006618644 implements MigrationInterface {
      CREATE TABLE inspections (
     id INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
     user_id INT(11) NOT NULL,
-    org_id INT(11) NOT NULL,
-    aircraft_id INT(11) NOT NULL,
+    organizationId INT(11) NOT NULL,
+    aircraftId INT(11) NOT NULL,
     aircraft_type VARCHAR(255) NULL,
     revision VARCHAR(255) NULL,
     revision_date DATETIME NULL,
@@ -39,13 +39,15 @@ export class CreateInspectionTable1741006618644 implements MigrationInterface {
     documentation TEXT NULL,
     cycle_type VARCHAR(255) NULL,
     i_key VARCHAR(255) NULL,
+    applicable enum('Yes','No') NULL,
+    motivation text NULL,
     status TINYINT(1) DEFAULT 1 NOT NULL COMMENT '1 = Active, 0 = Inactive',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at DATETIME NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (aircraft_id) REFERENCES aircrafts(id),
-    FOREIGN KEY (org_id) REFERENCES organization(id)
+    FOREIGN KEY (aircraftId) REFERENCES aircrafts(id),
+    FOREIGN KEY (organizationId) REFERENCES organizations(id)
 );
     `);
   }

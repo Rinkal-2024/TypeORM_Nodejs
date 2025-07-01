@@ -8,11 +8,12 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from "typeorm";
-import { Users } from "./UsersModel";
-import { Aircraft } from "./AircraftsModel";
+import { Users } from "./Users";
+import { Aircrafts } from "./Aircrafts";
+import { TechnicalBulletins } from "./TechnicalBulletins";
 
 @Entity("tb_work_report")
-export class WorkReport {
+export class WorkReports {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,15 +21,25 @@ export class WorkReport {
   @JoinColumn({ name: "user_id" })
   user: Users;
 
-  @ManyToOne(() => Aircraft, (aircraft) => aircraft.id)
-  @JoinColumn({ name: "aircraft_id" })
-  aircraft: Aircraft;
+  @ManyToOne(() => Aircrafts, (aircraft) => aircraft.id)
+  @JoinColumn({ name: "aircraftId" })
+  aircraft: Aircrafts;
+
+  @ManyToOne(
+    () => TechnicalBulletins,
+    (technicalBulletins) => technicalBulletins.workReportData
+  )
+  @JoinColumn({ name: "technical_bulletin_id" })
+  technicalBulletins: TechnicalBulletins;
 
   @Column("int")
   user_id: number;
 
   @Column("int")
-  aircraft_id: number;
+  aircraftId: number;
+
+  @Column("int")
+  technical_bulletin_id: number;
 
   @Column({ type: "varchar", length: 100, unique: true })
   wr_no: string;

@@ -1,0 +1,17 @@
+
+# you can ignore files
+.DS_Store
+*.log
+*.tmp
+
+# or folders
+dist/
+build/
+out/
+
+.env
+kendo-ui-license.txt
+telerik-license.txt
+package-lock.json
+.venv/
+node_modules/

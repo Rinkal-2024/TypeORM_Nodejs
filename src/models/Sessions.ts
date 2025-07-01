@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Users } from "./UsersModel";
+import { Users } from "./Users";
 
 @Entity("sessions")
 export class Sessions {
